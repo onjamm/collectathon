@@ -74,6 +74,33 @@ int main()
             player.set_y(player.y() + SPEED);
         }
 
+        if (bn::keypad::start_pressed())
+        {
+            player.set_x(PLAYER_START_X);
+            player.set_y(PLAYER_START_Y);
+            score = 0;
+            treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
+        }
+
+        // Wrap player around screen edges
+        if (player.x() < MIN_X)
+        {
+            player.set_x(MAX_X);
+        }
+        else if (player.x() > MAX_X)
+        {
+            player.set_x(MIN_X);
+        }
+
+        if (player.y() < MIN_Y)
+        {
+            player.set_y(MAX_Y);
+        }
+        else if (player.y() > MAX_Y)
+        {
+            player.set_y(MIN_Y);
+        }
+
         // The bounding boxes of the player and treasure, snapped to integer pixels
         bn::rect player_rect = bn::rect(player.x().round_integer(),
                                         player.y().round_integer(),
