@@ -17,10 +17,10 @@
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
 
-//Boost speed
+// Boost speed
 static constexpr bn::fixed BOOSTED_SPEED = 5;
 
-//Boost duration
+// Boost duration
 static constexpr int BOOST_DURATION_FRAMES = 300;
 static constexpr int MAX_BOOSTS = 3;
 
@@ -91,19 +91,20 @@ int main()
             player.set_y(player.y() + current_speed);
         }
 
-        //Speed Boost
-        if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0)) {
+        // Speed Boost
+        if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0))
+        {
             boost_remaining--;
             boost_duration_counter = BOOST_DURATION_FRAMES;
-
         }
 
-        
-        if (boost_duration_counter > 0) {
+        current_speed = SPEED;
+        if (boost_duration_counter > 0)
+        {
             current_speed = BOOSTED_SPEED;
             boost_duration_counter--;
         }
- 
+
         if (bn::keypad::start_pressed())
         {
             player.set_x(PLAYER_START_X);
