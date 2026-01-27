@@ -17,6 +17,13 @@
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
 
+//Boost speed
+static constexpr bn::fixed BOOSTED_SPEED = 5;
+
+//Boost duration
+static constexpr int BOOST_DURATION_FRAMES = 300;
+static constexpr int MAX_BOOSTS = 3;
+
 // Width and height of the the player and treasure bounding boxes
 static constexpr bn::size PLAYER_SIZE = {8, 8};
 static constexpr bn::size TREASURE_SIZE = {8, 8};
@@ -52,6 +59,12 @@ int main()
 
     int score = 0;
 
+    int boost_remaining = MAX_BOOSTS;
+
+    int boost_duration_counter = 0;
+
+    bn::fixed current_speed = SPEED;
+
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
 
@@ -63,27 +76,41 @@ int main()
         // Move player with d-pad
         if (bn::keypad::left_held())
         {
-            player.set_x(player.x() - SPEED);
+            player.set_x(player.x() - current_speed);
         }
         if (bn::keypad::right_held())
         {
-            player.set_x(player.x() + SPEED);
+            player.set_x(player.x() + current_speed);
         }
         if (bn::keypad::up_held())
         {
-            player.set_y(player.y() - SPEED);
+            player.set_y(player.y() - current_speed);
         }
         if (bn::keypad::down_held())
         {
-            player.set_y(player.y() + SPEED);
+            player.set_y(player.y() + current_speed);
         }
 
+        //Speed Boost
+        if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0)) {
+            boost_remaining--;
+            boost_duration_counter = BOOST_DURATION_FRAMES;
+
+        }
+
+        
+        if (boost_duration_counter > 0) {
+            current_speed = BOOSTED_SPEED;
+            boost_duration_counter--;
+        }
+ 
         if (bn::keypad::start_pressed())
         {
             player.set_x(PLAYER_START_X);
             player.set_y(PLAYER_START_Y);
             score = 0;
             treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
+            boost_remaining = MAX_BOOSTS;
         }
 
         // Wrap player around screen edges
