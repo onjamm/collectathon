@@ -47,6 +47,11 @@ static constexpr int MAX_SCORE_CHARS = 11;
 static constexpr int SCORE_X = 70;
 static constexpr int SCORE_Y = -70;
 
+// Maximum number of Snake Segments including the head
+static constexpr int MAX_SEGMENTS = 64;
+// frames between each position so it looks smooth
+static constexpr int POSITION_STEP_FRAMES = 2;
+
 int main()
 {
     bn::core::init();
@@ -67,6 +72,14 @@ int main()
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
+
+    // snakes body not including the head
+    bn::vector<bn::sprite_ptr, MAX_SEGMENTS> body_segments;
+    // using vector to store the exisiting position of the head so the body can follow
+    static constexpr int MAX_TRAIL_POINTS = MAX_SEGMENTS * 8;
+    bn::vector<bn::fixed_point, MAX_TRAIL_POINTS> head_positions;
+    // spacing the body segments along the tail
+    int position_step_counter = 0;
 
     // Backdrop Color
     bn::backdrop::set_color(bn::color(30, 0, 30));
