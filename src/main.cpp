@@ -125,6 +125,9 @@ int main()
             score = 0;
             treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
             boost_remaining = MAX_BOOSTS;
+            body_segments.clear();
+            head_positions.clear();
+            position_step_counter = 0;
         }
 
         // Wrap player around screen edges
