@@ -146,6 +146,12 @@ int main()
             player.set_y(MIN_Y);
         }
 
+        // if statement to increase size
+        position_step_counter++;
+        if (position_step_counter >= POSITION_STEP_FRAMES)
+        {
+        }
+
         // The bounding boxes of the player and treasure, snapped to integer pixels
         bn::rect player_rect = bn::rect(player.x().round_integer(),
                                         player.y().round_integer(),
