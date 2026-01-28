@@ -156,7 +156,13 @@ int main()
         if (position_step_counter >= POSITION_STEP_FRAMES)
         {
             position_step_counter = 0;
-            if (head_positions.size() < MAX_TAIL_SEGMENTS)
+
+            bn::fixed_point current_head(player.x(), player.y());
+
+            //Only shift if head moved
+            if (head_positions.empty() || head_positions[0] != current_head)
+            {
+                if (head_positions.size() < MAX_TAIL_SEGMENTS)
             {
                 // push the head vector down by one element
                 head_positions.push_back(bn::fixed_point());
@@ -168,17 +174,20 @@ int main()
             }
             // keep our head stored at index 0
             head_positions[0] = bn::fixed_point(player.x(), player.y());
+            }
+            
+        }
 
-            // Update body segments to follow the head
-            for (int i = 0; i < body_segments.size(); ++i)
+        // Update body segments to follow the head
+        for (int i = 0; i < body_segments.size(); ++i)
+        {
+            int tail_index = (i + 1) * 2;
+            if (tail_index < head_positions.size())
             {
-                int tail_index = (i + 1) * 8;
-                if (tail_index < head_positions.size())
-                {
-                    body_segments[i].set_position(head_positions[tail_index]);
-                }
+                body_segments[i].set_position(head_positions[tail_index]);
             }
         }
+        
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
         bn::rect player_rect = bn::rect(player.x().round_integer(),
