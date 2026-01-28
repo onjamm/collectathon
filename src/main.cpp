@@ -146,10 +146,25 @@ int main()
             player.set_y(MIN_Y);
         }
 
+        // https://gvaliente.github.io/butano/classbn_1_1fixed__point__t.html
+        // Explained Butano docs found on github pages used for positioning
         // if statement to increase size
         position_step_counter++;
         if (position_step_counter >= POSITION_STEP_FRAMES)
         {
+            position_step_counter = 0;
+            if (head_positions.size() < MAX_TRAIL_POINTS)
+            {
+                // push the head vector down by one element
+                head_positions.push_back(bn::fixed_point());
+            }
+            // push the rest of the body down by one index point
+            for (int i = head_positions.size() - 1; i > 0; --i)
+            {
+                head_positions[i] = head_positions[i - 1];
+            }
+            // keep our head stored at index 0
+            head_positions[0] = bn::fixed_point(player.x(), player.y());
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
