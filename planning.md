@@ -12,6 +12,12 @@ this is the pivotal line that imports the random to be used for generating the "
 6. Create a function for when A is pressed and have it speed up the players movement.
 
 ## Brainstorming game ideas
+- build a snake style game, when the user collects a gold coin they grow in length 
+- instead of speed boost allow for slowing down 
+- make our sprite look like a snake
+- if the users sprite ptr crosses over it's body then the game ends with selection to restart
+- a counter in the top right showing a score representing the length of the snake 
+- after a certain score do we add obstacles? 
 
 ## Plan for implementing game
 
