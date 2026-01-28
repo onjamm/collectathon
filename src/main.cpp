@@ -15,7 +15,7 @@
 #include "common_fixed_8x16_font.h"
 
 // Pixels / Frame player moves at
-static constexpr bn::fixed SPEED = 2;
+static constexpr bn::fixed SPEED = .5;
 
 // Boost speed
 static constexpr bn::fixed BOOSTED_SPEED = 5;
@@ -35,6 +35,7 @@ static constexpr int MIN_X = -bn::display::width() / 2;
 static constexpr int MAX_X = bn::display::width() / 2;
 
 // new starting location for treasure and player
+
 static constexpr int PLAYER_START_X = -50;
 static constexpr int PLAYER_START_Y = 50;
 static constexpr int TREASURE_START_X = 0;
@@ -87,47 +88,22 @@ int main()
     while (true)
     {
         // Move player with d-pad
-        // if (bn::keypad::left_held())
-        // {
-        //     player.set_x(player.x() - current_speed);
-        // }
-        // if (bn::keypad::right_held())
-        // {
-        //     player.set_x(player.x() + current_speed);
-        // }
-        // if (bn::keypad::up_held())
-        // {
-        //     player.set_y(player.y() - current_speed);
-        // }
-        // if (bn::keypad::down_held())
-        // {
-        //     player.set_y(player.y() + current_speed);
-        // }
-
-        //Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
-        bn::fixed dx = 0;
-        bn::fixed dy = 0;
-
-        if (bn::keypad::left_held() && dx == 0 && dy == 0) 
+        if (bn::keypad::left_held())
         {
-            dx = -current_speed;
-        } 
-        if (bn::keypad::right_held() && dx == 0 && dy == 0) 
-        {
-            dx = current_speed;
+            player.set_x(player.x() - current_speed);
         }
-        if (bn::keypad::down_held() && dx == 0 && dy == 0) 
+        if (bn::keypad::right_held())
         {
-            dy = current_speed;
+            player.set_x(player.x() + current_speed);
         }
-        if (bn::keypad::up_held() && dx == 0 && dy == 0) 
+        if (bn::keypad::up_held())
         {
-            dy = -current_speed;
+            player.set_y(player.y() - current_speed);
         }
-        
-
-        player.set_x(player.x() + dx);
-        player.set_y(player.y() + dy);
+        if (bn::keypad::down_held())
+        {
+            player.set_y(player.y() + current_speed);
+        }
 
         // Speed Boost
         if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0))
@@ -184,23 +160,22 @@ int main()
 
             bn::fixed_point current_head(player.x(), player.y());
 
-            //Only shift if head moved
+            // Only shift if head moved
             if (head_positions.empty() || head_positions[0] != current_head)
             {
                 if (head_positions.size() < MAX_TAIL_SEGMENTS)
-            {
-                // push the head vector down by one element
-                head_positions.push_back(bn::fixed_point());
+                {
+                    // push the head vector down by one element
+                    head_positions.push_back(bn::fixed_point());
+                }
+                // push the rest of the body down by one index point
+                for (int i = head_positions.size() - 1; i > 0; --i)
+                {
+                    head_positions[i] = head_positions[i - 1];
+                }
+                // keep our head stored at index 0
+                head_positions[0] = bn::fixed_point(player.x(), player.y());
             }
-            // push the rest of the body down by one index point
-            for (int i = head_positions.size() - 1; i > 0; --i)
-            {
-                head_positions[i] = head_positions[i - 1];
-            }
-            // keep our head stored at index 0
-            head_positions[0] = bn::fixed_point(player.x(), player.y());
-            }
-            
         }
 
         // Update body segments to follow the head
@@ -212,7 +187,6 @@ int main()
                 body_segments[i].set_position(head_positions[tail_index]);
             }
         }
-        
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
         bn::rect player_rect = bn::rect(player.x().round_integer(),
