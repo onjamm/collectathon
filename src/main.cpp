@@ -15,7 +15,7 @@
 #include "common_fixed_8x16_font.h"
 
 // Pixels / Frame player moves at
-static constexpr bn::fixed SPEED = .5;
+static constexpr bn::fixed SPEED = .85;
 
 // Boost speed
 static constexpr bn::fixed BOOSTED_SPEED = 5;
@@ -35,7 +35,6 @@ static constexpr int MIN_X = -bn::display::width() / 2;
 static constexpr int MAX_X = bn::display::width() / 2;
 
 // new starting location for treasure and player
-
 static constexpr int PLAYER_START_X = -50;
 static constexpr int PLAYER_START_Y = 50;
 static constexpr int TREASURE_START_X = 0;
@@ -88,22 +87,46 @@ int main()
     while (true)
     {
         // Move player with d-pad
-        if (bn::keypad::left_held())
+        // if (bn::keypad::left_held())
+        // {
+        //     player.set_x(player.x() - current_speed);
+        // }
+        // if (bn::keypad::right_held())
+        // {
+        //     player.set_x(player.x() + current_speed);
+        // }
+        // if (bn::keypad::up_held())
+        // {
+        //     player.set_y(player.y() - current_speed);
+        // }
+        // if (bn::keypad::down_held())
+        // {
+        //     player.set_y(player.y() + current_speed);
+        // }
+
+        // Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
+        bn::fixed dx = 0;
+        bn::fixed dy = 0;
+
+        if (bn::keypad::left_held() && dx == 0 && dy == 0)
         {
-            player.set_x(player.x() - current_speed);
+            dx = -current_speed;
         }
-        if (bn::keypad::right_held())
+        if (bn::keypad::right_held() && dx == 0 && dy == 0)
         {
-            player.set_x(player.x() + current_speed);
+            dx = current_speed;
         }
-        if (bn::keypad::up_held())
+        if (bn::keypad::down_held() && dx == 0 && dy == 0)
         {
-            player.set_y(player.y() - current_speed);
+            dy = current_speed;
         }
-        if (bn::keypad::down_held())
+        if (bn::keypad::up_held() && dx == 0 && dy == 0)
         {
-            player.set_y(player.y() + current_speed);
+            dy = -current_speed;
         }
+
+        player.set_x(player.x() + dx);
+        player.set_y(player.y() + dy);
 
         // Speed Boost
         if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0))
