@@ -148,7 +148,7 @@ int main()
 
         // https://gvaliente.github.io/butano/classbn_1_1fixed__point__t.html
         // Explained Butano docs found on github pages used for positioning
-        // if statement to increase size
+        // if statement to keep head at fixed position and add body segments to length of head
         position_step_counter++;
         if (position_step_counter >= POSITION_STEP_FRAMES)
         {
