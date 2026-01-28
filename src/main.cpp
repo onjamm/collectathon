@@ -167,7 +167,15 @@ int main()
             head_positions[0] = bn::fixed_point(player.x(), player.y());
 
             // Update body segments to follow the head
-
+            for (int i = 0; i < body_segments.size(); ++i) 
+            {
+                int tail_index = (i + 1) * 8;
+                if (tail_index < head_positions.size())
+                {
+                    body_segments[i].set_position(head_positions[tail_index]);
+                }
+            }
+            
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
