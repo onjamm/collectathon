@@ -20,4 +20,11 @@ this is the pivotal line that imports the random to be used for generating the "
 - after a certain score do we add obstacles? 
 
 ## Plan for implementing game
-
+- set a MAX_SEGMENTS constant and a constant positioning for adding to the body
+- Store position of the head so the body can follow using deque?
+- set spacing for body segments to follow the head 
+- if statement, for the head position to be fixed at the front of que.
+- create index for all the body segments
+- create an if statement for the user to react to the treasure when intersected 
+- add a body segment after each treasure is collected 
+- reset body on game end logic 
