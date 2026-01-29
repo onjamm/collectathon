@@ -52,11 +52,18 @@ static constexpr int MAX_SEGMENTS = 64;
 // frames between each position so it looks smooth
 static constexpr int POSITION_STEP_FRAMES = 1;
 
-//Direction Enum
-enum class Direction {NONE, LEFT, RIGHT, UP, DOWN};
+// Direction Enum
+enum class Direction
+{
+    NONE,
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
 Direction last_dir = Direction::NONE;
 
-//Self Collision 
+// Self Collision
 bool self_collision = false;
 
 int main()
@@ -217,7 +224,7 @@ int main()
         // Update body segments to follow the head
         for (int i = 0; i < body_segments.size(); ++i)
         {
-            int tail_index = (i + 1) * 2;
+            int tail_index = (i + 1) * 10;
             if (tail_index < head_positions.size())
             {
                 body_segments[i].set_position(head_positions[tail_index]);
@@ -233,18 +240,19 @@ int main()
                                           treasure.y().round_integer(),
                                           TREASURE_SIZE.width(),
                                           TREASURE_SIZE.height());
-        
-        //Check for collision between player (head) and body segments
-        for (int i = 0; i < body_segments.size(); ++i) {
+
+        // Check for collision between player (head) and body segments
+        for (int i = 0; i < body_segments.size(); ++i)
+        {
             bn::rect body_rect = bn::rect(body_segments[i].x().round_integer(),
                                           body_segments[i].y().round_integer(),
                                           PLAYER_SIZE.width(),
                                           PLAYER_SIZE.height());
-            if (player_rect.intersects(body_rect)) {
+            if (player_rect.intersects(body_rect))
+            {
                 self_collision = true;
                 break;
             }
-
         }
         // If the bounding boxes overlap, set the treasure to a new location an increase score
         if (player_rect.intersects(treasure_rect))
