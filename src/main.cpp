@@ -52,6 +52,10 @@ static constexpr int MAX_SEGMENTS = 64;
 // frames between each position so it looks smooth
 static constexpr int POSITION_STEP_FRAMES = 1;
 
+//Direction Enum
+enum class Direction {NONE, LEFT, RIGHT, UP, DOWN};
+Direction last_dir = Direction::NONE;
+
 int main()
 {
     bn::core::init();
@@ -108,21 +112,25 @@ int main()
         bn::fixed dx = 0;
         bn::fixed dy = 0;
 
-        if (bn::keypad::left_held() && dx == 0 && dy == 0)
+        if (bn::keypad::left_held() && dx == 0 && dy == 0 && last_dir != Direction::RIGHT)
         {
             dx = -current_speed;
+            last_dir = Direction::LEFT;
         }
-        if (bn::keypad::right_held() && dx == 0 && dy == 0)
+        if (bn::keypad::right_held() && dx == 0 && dy == 0 && last_dir != Direction::LEFT)
         {
             dx = current_speed;
+            last_dir = Direction::RIGHT;
         }
-        if (bn::keypad::down_held() && dx == 0 && dy == 0)
+        if (bn::keypad::down_held() && dx == 0 && dy == 0 && last_dir != Direction::UP)
         {
             dy = current_speed;
+            last_dir = Direction::DOWN;
         }
-        if (bn::keypad::up_held() && dx == 0 && dy == 0)
+        if (bn::keypad::up_held() && dx == 0 && dy == 0 && last_dir != Direction::DOWN)
         {
             dy = -current_speed;
+            last_dir = Direction::UP;
         }
 
         player.set_x(player.x() + dx);
@@ -147,6 +155,7 @@ int main()
             player.set_x(PLAYER_START_X);
             player.set_y(PLAYER_START_Y);
             score = 0;
+            last_dir = Direction::NONE;
             treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
             boost_remaining = MAX_BOOSTS;
             body_segments.clear();
