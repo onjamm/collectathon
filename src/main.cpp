@@ -129,25 +129,25 @@ int main()
         {
             dx = -current_speed;
             last_dir = Direction::LEFT;
-            current_angle = bn::fixed(180);
+            current_angle = bn::fixed(90);
         }
         if (bn::keypad::right_held() && dx == 0 && dy == 0 && last_dir != Direction::LEFT)
         {
             dx = current_speed;
             last_dir = Direction::RIGHT;
-            current_angle = bn::fixed(0);
+            current_angle = bn::fixed(270);
         }
         if (bn::keypad::down_held() && dx == 0 && dy == 0 && last_dir != Direction::UP)
         {
             dy = current_speed;
             last_dir = Direction::DOWN;
-            current_angle = bn::fixed(270);
+            current_angle = bn::fixed(180);
         }
         if (bn::keypad::up_held() && dx == 0 && dy == 0 && last_dir != Direction::DOWN)
         {
             dy = -current_speed;
             last_dir = Direction::UP;
-            current_angle = bn::fixed(90);
+            current_angle = bn::fixed(0);
         }
 
         player.set_x(player.x() + dx);
@@ -236,6 +236,13 @@ int main()
             {
                 body_segments[i].set_position(head_positions[tail_index]);
             }
+        }
+
+        // applying the current_angles from the movement section to player rotation
+        player.set_rotation_angle_safe(current_angle);
+        for (bn::sprite_ptr &seg : body_segments)
+        {
+            seg.set_rotation_angle_safe(current_angle);
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels and body segments
