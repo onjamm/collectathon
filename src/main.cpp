@@ -12,6 +12,9 @@
 
 #include "bn_sprite_items_dot.h"
 #include "bn_sprite_items_square.h"
+// body asset
+#include "bn_sprite_items_body.h"
+
 #include "common_fixed_8x16_font.h"
 
 // Pixels / Frame player moves at
