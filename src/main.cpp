@@ -16,6 +16,8 @@
 // body asset
 #include "bn_sprite_items_body.h"
 
+#include <bn_sprite_affine_mat_ptr.h>
+
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 1;
 
@@ -93,6 +95,10 @@ int main()
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
+
+    // affine matrix for our body segments
+    bn::sprite_affine_mat_ptr snake_mat = bn::sprite_affine_mat_ptr::create();
+    player.set_affine_mat(snake_mat);
 
     // snakes body not including the head
     bn::vector<bn::sprite_ptr, MAX_SEGMENTS> body_segments;
@@ -214,7 +220,7 @@ int main()
         {
             position_step_counter = 0;
 
-            bn::fixed_point current_head(player.x(), player.y());
+            bn::fixed_point current_head(player.x().round_integer(), player.y().round_integer());
 
             // Only shift if head moved
             if (head_positions.empty() || head_positions[0] != current_head)
@@ -230,7 +236,7 @@ int main()
                     head_positions[i] = head_positions[i - 1];
                 }
                 // keep our head stored at index 0
-                head_positions[0] = bn::fixed_point(player.x(), player.y());
+                head_positions[0] = bn::fixed_point(player.x().round_integer(), player.y().round_integer());
             }
         }
 
@@ -244,29 +250,36 @@ int main()
                 bn::fixed_point curr = head_positions[tail_index];
                 body_segments[i].set_position(curr);
 
-                if (tail_index > 0) {
-                    
+                if (tail_index > 0)
+                {
+
                     bn::fixed_point prev = head_positions[tail_index - 1];
 
                     bn::fixed path_dx = prev.x() - curr.x();
                     bn::fixed path_dy = prev.y() - curr.y();
 
-                    if (path_dx > 0) {
-                        body_segments[i].set_rotation_angle_safe(270);
-                    } else if (path_dx < 0) {
-                        body_segments[i].set_rotation_angle_safe(90);
-                    } else if (path_dy > 0) {
-                        body_segments[i].set_rotation_angle_safe(180);
-                    } else if (path_dy < 0) {
-                        body_segments[i].set_rotation_angle_safe(0);
-                    }
-                    }
+                    // if (path_dx > 0)
+                    // {
+                    //     body_segments[i].set_rotation_angle_safe(270);
+                    // }
+                    // else if (path_dx < 0)
+                    // {
+                    //     body_segments[i].set_rotation_angle_safe(90);
+                    // }
+                    // else if (path_dy > 0)
+                    // {
+                    //     body_segments[i].set_rotation_angle_safe(180);
+                    // }
+                    // else if (path_dy < 0)
+                    // {
+                    //     body_segments[i].set_rotation_angle_safe(0);
+                    // }
                 }
+            }
         }
 
         // applying the current_angles from the movement section to player rotation
-        player.set_rotation_angle_safe(current_angle);
-        
+        snake_mat.set_rotation_angle_safe(current_angle);
 
         // The bounding boxes of the player and treasure, snapped to integer pixels and body segments
         bn::rect player_rect = bn::rect(player.x().round_integer(),
@@ -306,8 +319,11 @@ int main()
             if (body_segments.size() < MAX_SEGMENTS - 1 && !head_positions.empty())
             {
                 bn::fixed_point tail_pos = head_positions.back();
-                body_segments.push_back(
-                    bn::sprite_items::body.create_sprite(tail_pos.x(), tail_pos.y()));
+
+                bn::sprite_ptr seg = bn::sprite_items::body.create_sprite(tail_pos.x(), tail_pos.y());
+                seg.set_affine_mat(snake_mat);
+
+                body_segments.push_back(bn::move(seg));
             }
         }
 
