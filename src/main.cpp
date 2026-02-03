@@ -126,7 +126,7 @@ int main()
         // }
 
         // Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
-        
+
         if (bn::keypad::left_pressed() && last_dir != Direction::RIGHT)
         {
             dx = -current_speed;
