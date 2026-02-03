@@ -238,18 +238,35 @@ int main()
         for (int i = 0; i < body_segments.size(); ++i)
         {
             int tail_index = (i + 1) * 8;
+
             if (tail_index < head_positions.size())
             {
-                body_segments[i].set_position(head_positions[tail_index]);
-            }
+                bn::fixed_point curr = head_positions[tail_index];
+                body_segments[i].set_position(curr);
+
+                if (tail_index > 0) {
+                    
+                    bn::fixed_point prev = head_positions[tail_index - 1];
+
+                    bn::fixed path_dx = prev.x() - curr.x();
+                    bn::fixed path_dy = prev.y() - curr.y();
+
+                    if (path_dx > 0) {
+                        body_segments[i].set_rotation_angle_safe(270);
+                    } else if (path_dx < 0) {
+                        body_segments[i].set_rotation_angle_safe(90);
+                    } else if (path_dy > 0) {
+                        body_segments[i].set_rotation_angle_safe(180);
+                    } else if (path_dy < 0) {
+                        body_segments[i].set_rotation_angle_safe(0);
+                    }
+                    }
+                }
         }
 
         // applying the current_angles from the movement section to player rotation
         player.set_rotation_angle_safe(current_angle);
-        for (bn::sprite_ptr &seg : body_segments)
-        {
-            seg.set_rotation_angle_safe(current_angle);
-        }
+        
 
         // The bounding boxes of the player and treasure, snapped to integer pixels and body segments
         bn::rect player_rect = bn::rect(player.x().round_integer(),
