@@ -88,6 +88,9 @@ int main()
 
     bn::fixed current_angle = 0;
 
+    bn::fixed dx = 0;
+    bn::fixed dy = 0;
+
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
 
@@ -123,30 +126,32 @@ int main()
         // }
 
         // Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
-        bn::fixed dx = 0;
-        bn::fixed dy = 0;
-
-        if (bn::keypad::left_held() && dx == 0 && dy == 0 && last_dir != Direction::RIGHT)
+        
+        if (bn::keypad::left_pressed() && last_dir != Direction::RIGHT)
         {
             dx = -current_speed;
+            dy = 0;
             last_dir = Direction::LEFT;
             current_angle = bn::fixed(90);
         }
-        if (bn::keypad::right_held() && dx == 0 && dy == 0 && last_dir != Direction::LEFT)
+        if (bn::keypad::right_pressed() && last_dir != Direction::LEFT)
         {
             dx = current_speed;
+            dy = 0;
             last_dir = Direction::RIGHT;
             current_angle = bn::fixed(270);
         }
-        if (bn::keypad::down_held() && dx == 0 && dy == 0 && last_dir != Direction::UP)
+        if (bn::keypad::down_pressed() && last_dir != Direction::UP)
         {
             dy = current_speed;
+            dx = 0;
             last_dir = Direction::DOWN;
             current_angle = bn::fixed(180);
         }
-        if (bn::keypad::up_held() && dx == 0 && dy == 0 && last_dir != Direction::DOWN)
+        if (bn::keypad::up_pressed() && last_dir != Direction::DOWN)
         {
             dy = -current_speed;
+            dx = 0;
             last_dir = Direction::UP;
             current_angle = bn::fixed(0);
         }
