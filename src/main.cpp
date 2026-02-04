@@ -24,12 +24,12 @@
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 1;
 
-// Boost speed
-static constexpr bn::fixed BOOSTED_SPEED = 2;
+// // Boost speed
+// static constexpr bn::fixed BOOSTED_SPEED = 2;
 
-// Boost duration
-static constexpr int BOOST_DURATION_FRAMES = 300;
-static constexpr int MAX_BOOSTS = 3;
+// // Boost duration
+// static constexpr int BOOST_DURATION_FRAMES = 300;
+// static constexpr int MAX_BOOSTS = 3;
 
 // Width and height of the the player and treasure bounding boxes
 static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -106,9 +106,9 @@ int main()
 
     int score = 0;
 
-    int boost_remaining = MAX_BOOSTS;
+    // int boost_remaining = MAX_BOOSTS;
 
-    int boost_duration_counter = 0;
+    // int boost_duration_counter = 0;
 
     bn::fixed current_speed = SPEED;
 
@@ -144,7 +144,7 @@ int main()
             score = 0;
             last_dir = Direction::NONE;
             treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
-            boost_remaining = MAX_BOOSTS;
+            // boost_remaining = MAX_BOOSTS;
             body_segments.clear();
             head_positions.clear();
             position_step_counter = 0;
@@ -190,19 +190,19 @@ int main()
         player.set_x(player.x() + dx);
         player.set_y(player.y() + dy);
 
-        // Speed Boost
-        if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0))
-        {
-            boost_remaining--;
-            boost_duration_counter = BOOST_DURATION_FRAMES;
-        }
+        // // Speed Boost
+        // if (bn::keypad::a_pressed() && (boost_remaining > 0) && (boost_duration_counter == 0))
+        // {
+        //     boost_remaining--;
+        //     boost_duration_counter = BOOST_DURATION_FRAMES;
+        // }
 
-        current_speed = SPEED;
-        if (boost_duration_counter > 0)
-        {
-            current_speed = BOOSTED_SPEED;
-            boost_duration_counter--;
-        }
+        // current_speed = SPEED;
+        // if (boost_duration_counter > 0)
+        // {
+        //     current_speed = BOOSTED_SPEED;
+        //     boost_duration_counter--;
+        // }
 
         // Reset game if the head collides with the body
         if (self_collision)
