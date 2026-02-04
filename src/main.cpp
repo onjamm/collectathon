@@ -15,6 +15,9 @@
 #include "common_fixed_8x16_font.h"
 // body asset
 #include "bn_sprite_items_body.h"
+// start screen background ptr and asset
+#include "bn_regular_bg_items_start_screen.h"
+#include <bn_regular_bg_ptr.h>
 
 #include <bn_sprite_affine_mat_ptr.h>
 
@@ -73,6 +76,11 @@ bool self_collision = false;
 int main()
 {
     bn::core::init();
+    // boolean for title screen
+    bool on_title = true;
+
+    // background screen for the start screen
+    bn::regular_bg_ptr start_bg = bn::regular_bg_items::start_screen.create_bg(0, 0);
 
     bn::random rng = bn::random();
 
@@ -110,6 +118,27 @@ int main()
 
     // Backdrop Color
     bn::backdrop::set_color(bn::color(30, 0, 30));
+
+    // While statment to show our start_screen before gameplay
+    while (on_title)
+    {
+        if (bn::keypad::start_pressed())
+        {
+            on_title = false;
+            start_bg.set_visible(false);
+            player.set_x(PLAYER_START_X);
+            player.set_y(PLAYER_START_Y);
+            score = 0;
+            last_dir = Direction::NONE;
+            treasure.set_position(TREASURE_START_X, TREASURE_START_Y);
+            boost_remaining = MAX_BOOSTS;
+            body_segments.clear();
+            head_positions.clear();
+            position_step_counter = 0;
+            self_collision = false;
+        }
+        bn::core::update();
+    }
 
     while (true)
     {
@@ -179,7 +208,7 @@ int main()
             boost_duration_counter--;
         }
         // Reset game if Start is pressed or self collision is true
-        if (bn::keypad::start_pressed() || self_collision)
+        if (self_collision)
         {
             player.set_x(PLAYER_START_X);
             player.set_y(PLAYER_START_Y);
