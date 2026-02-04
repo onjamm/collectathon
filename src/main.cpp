@@ -62,6 +62,7 @@ static constexpr int POSITION_STEP_FRAMES = 1;
 //Segment spacing
 static constexpr int SEGMENT_SPACING = 8;
 
+
 // Direction Enum
 enum class Direction
 {
@@ -91,6 +92,12 @@ int main()
     bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS> score_sprites = {};
     bn::sprite_text_generator text_generator(common::fixed_8x16_sprite_font);
 
+    //Player Sprite and Treasure 
+    bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
+    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
+    player.set_visible(false);
+    treasure.set_visible(false);
+
     int score = 0;
 
     int boost_remaining = MAX_BOOSTS;
@@ -103,9 +110,6 @@ int main()
 
     bn::fixed dx = 0;
     bn::fixed dy = 0;
-
-    bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_START_X, PLAYER_START_Y);
-    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_START_X, TREASURE_START_Y);
 
     // affine matrix for our body segments
     bn::sprite_affine_mat_ptr snake_mat = bn::sprite_affine_mat_ptr::create();
@@ -139,12 +143,14 @@ int main()
             head_positions.clear();
             position_step_counter = 0;
             self_collision = false;
+            player.set_visible(true);
+            treasure.set_visible(true);
         }
         bn::core::update();
     }
 
-    while (true)
-    {
+    while (!on_title)
+    { 
         // Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
         if (bn::keypad::left_pressed() && last_dir != Direction::RIGHT)
         {
