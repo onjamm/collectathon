@@ -59,6 +59,9 @@ static constexpr int MAX_SEGMENTS = 64;
 // frames between each position so it looks smooth
 static constexpr int POSITION_STEP_FRAMES = 1;
 
+//Segment spacing
+static constexpr int SEGMENT_SPACING = 8;
+
 // Direction Enum
 enum class Direction
 {
@@ -142,26 +145,7 @@ int main()
 
     while (true)
     {
-        // Move player with d-pad
-        // if (bn::keypad::left_held())
-        // {
-        //     player.set_x(player.x() - current_speed);
-        // }
-        // if (bn::keypad::right_held())
-        // {
-        //     player.set_x(player.x() + current_speed);
-        // }
-        // if (bn::keypad::up_held())
-        // {
-        //     player.set_y(player.y() - current_speed);
-        // }
-        // if (bn::keypad::down_held())
-        // {
-        //     player.set_y(player.y() + current_speed);
-        // }
-
         // Move player with d-pad (but no diagonal movement allowed (only one button can be pressed at a time))
-
         if (bn::keypad::left_pressed() && last_dir != Direction::RIGHT)
         {
             dx = -current_speed;
@@ -207,7 +191,8 @@ int main()
             current_speed = BOOSTED_SPEED;
             boost_duration_counter--;
         }
-        // Reset game if Start is pressed or self collision is true
+        
+        // Reset game if the head collides with the body
         if (self_collision)
         {
             player.set_x(PLAYER_START_X);
@@ -272,38 +257,13 @@ int main()
         // Update body segments to follow the head
         for (int i = 0; i < body_segments.size(); ++i)
         {
-            int tail_index = (i + 1) * 8;
+            int tail_index = (i + 1) * SEGMENT_SPACING;
 
             if (tail_index < head_positions.size())
             {
                 bn::fixed_point curr = head_positions[tail_index];
                 body_segments[i].set_position(curr);
 
-                // if (tail_index > 0)
-                // {
-
-                // //bn::fixed_point prev = head_positions[tail_index - 1];
-
-                //     // bn::fixed path_dx = prev.x() - curr.x();
-                //     // bn::fixed path_dy = prev.y() - curr.y();
-
-                //     // if (path_dx > 0)
-                //     // {
-                //     //     body_segments[i].set_rotation_angle_safe(270);
-                //     // }
-                //     // else if (path_dx < 0)
-                //     // {
-                //     //     body_segments[i].set_rotation_angle_safe(90);
-                //     // }
-                //     // else if (path_dy > 0)
-                //     // {
-                //     //     body_segments[i].set_rotation_angle_safe(180);
-                //     // }
-                //     // else if (path_dy < 0)
-                //     // {
-                //     //     body_segments[i].set_rotation_angle_safe(0);
-                //     // }
-                // }
             }
         }
 
